@@ -23,6 +23,7 @@ class DateRange extends Component {
 
     this.step = 0;
     this.styles = getTheme(theme);
+    console.log('drp constructor')
   }
 
   componentDidMount() {
