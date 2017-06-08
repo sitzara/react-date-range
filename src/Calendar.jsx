@@ -32,6 +32,12 @@ function isOusideMinMax(dayMoment, minDate, maxDate, format) {
   )
 }
 
+function isDisabledDay(dayMoment, disabledDates, format) {
+  return disabledDates.reduce((isDisabled, date) => {
+    return isDisabled || dayMoment.isSame(parseInput(date, format, 'startOf'), 'day');
+  }, false);
+}
+
 class Calendar extends Component {
 
   constructor(props, context) {
@@ -166,7 +172,7 @@ class Calendar extends Component {
     // TODO: Split this logic into smaller chunks
     const { styles }               = this;
 
-    const { range, minDate, maxDate, format, onlyClasses, disableDaysBeforeToday, specialDays } = this.props;
+    const { range, minDate, maxDate, disabledDates, format, onlyClasses, disableDaysBeforeToday, specialDays } = this.props;
 
     const shownDate                = this.getShownDate();
     const { date, firstDayOfWeek } = this.state;
@@ -225,6 +231,7 @@ class Calendar extends Component {
         return dayMoment.endOf('day').isSame(specialDay.date.endOf('day'));
       });
       const isOutsideMinMax = isOusideMinMax(dayMoment, minDate, maxDate, format);
+      const isDayDisabled = disabledDates.size !== 0 && isDisabledDay(dayMoment, disabledDates, format);
 
       return (
         <DayCell
@@ -239,7 +246,7 @@ class Calendar extends Component {
           isSpecialDay={ isSpecialDay }
           isToday={ isToday }
           key={ index }
-          isPassive = { isPassive || isOutsideMinMax }
+          isPassive = { isPassive || isOutsideMinMax || isDayDisabled }
           onlyClasses = { onlyClasses }
           classNames = { classes }
         />
@@ -271,6 +278,7 @@ Calendar.defaultProps = {
   onlyClasses : false,
   classNames  : {},
   specialDays : [],
+  disabledDates: [],
 }
 
 Calendar.propTypes = {
@@ -284,6 +292,7 @@ Calendar.propTypes = {
   }),
   minDate        : PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string]),
   maxDate        : PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string]),
+  disabledDates  : PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string])),
   date           : PropTypes.oneOfType([PropTypes.object, PropTypes.string, PropTypes.func]),
   format         : PropTypes.string.isRequired,
   firstDayOfWeek : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),

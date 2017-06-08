@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import parseInput from './utils/parseInput.js';
-import Calendar from './Calendar.js';
+import Calendar from './Calendar.jsx';
 import PredefinedRanges from './PredefinedRanges.js';
 import getTheme, { defaultClasses } from './styles.js';
 
@@ -23,7 +23,6 @@ class DateRange extends Component {
 
     this.step = 0;
     this.styles = getTheme(theme);
-    console.log('drp constructor')
   }
 
   componentDidMount() {
@@ -108,7 +107,7 @@ class DateRange extends Component {
   }
 
   render() {
-    const { ranges, format, linkedCalendars, style, calendars, firstDayOfWeek, minDate, maxDate, classNames, onlyClasses, specialDays, lang, disableDaysBeforeToday, offsetPositive, shownDate, showMonthArrow, rangedCalendars } = this.props;
+    const { ranges, format, linkedCalendars, style, calendars, firstDayOfWeek, minDate, maxDate, disabledDates, classNames, onlyClasses, specialDays, lang, disableDaysBeforeToday, offsetPositive, shownDate, showMonthArrow, rangedCalendars } = this.props;
     const { range, link } = this.state;
     const { styles } = this;
 
@@ -155,6 +154,7 @@ class DateRange extends Component {
                 theme={ styles }
                 minDate={ minDate }
                 maxDate={ maxDate }
+                disabledDates={disabledDates}
 		            onlyClasses={ onlyClasses }
 		            specialDays={ specialDays }
                 classNames={ classes }
@@ -179,6 +179,7 @@ DateRange.defaultProps = {
   specialDays     : [],
   rangedCalendars : false,
   twoStepChange   : false,
+  disabledDates   : [],
 }
 
 DateRange.propTypes = {
@@ -189,6 +190,7 @@ DateRange.propTypes = {
   endDate         : PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string]),
   minDate         : PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string]),
   maxDate         : PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string]),
+  disabledDates   : PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string])),
   dateLimit       : PropTypes.func,
   ranges          : PropTypes.object,
   linkedCalendars : PropTypes.bool,
