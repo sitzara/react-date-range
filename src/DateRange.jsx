@@ -12,7 +12,7 @@ class DateRange extends Component {
     super(props, context);
 
     const { format, linkedCalendars, theme } = props;
-
+    
     const startDate = parseInput(props.startDate, format, 'startOf');
     const endDate   = parseInput(props.endDate, format, 'endOf');
 
@@ -107,7 +107,7 @@ class DateRange extends Component {
   }
 
   render() {
-    const { ranges, format, linkedCalendars, style, calendars, firstDayOfWeek, minDate, maxDate, disabledDates, classNames, onlyClasses, specialDays, lang, disableDaysBeforeToday, offsetPositive, shownDate, showMonthArrow, rangedCalendars } = this.props;
+    const { ranges, format, linkedCalendars, style, calendars, firstDayOfWeek, minDate, maxDate, disabledDates, classNames, onlyClasses, specialDays, lang, disableDaysBeforeToday, offsetPositive, shownDate, showMonthArrow, rangedCalendars, unselected } = this.props;
     const { range, link } = this.state;
     const { styles } = this;
 
@@ -154,7 +154,8 @@ class DateRange extends Component {
                 theme={ styles }
                 minDate={ minDate }
                 maxDate={ maxDate }
-                disabledDates={disabledDates}
+                disabledDates={ disabledDates }
+                unselected={ unselected }
 		            onlyClasses={ onlyClasses }
 		            specialDays={ specialDays }
                 classNames={ classes }
@@ -193,6 +194,7 @@ DateRange.propTypes = {
   disabledDates   : PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string])),
   dateLimit       : PropTypes.func,
   ranges          : PropTypes.object,
+  unselected      : PropTypes.bool,
   linkedCalendars : PropTypes.bool,
   twoStepChange   : PropTypes.bool,
   theme           : PropTypes.object,

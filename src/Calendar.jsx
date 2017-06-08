@@ -43,7 +43,7 @@ class Calendar extends Component {
   constructor(props, context) {
     super(props, context);
 
-    const { format, range, theme, offset, firstDayOfWeek, locale, shownDate } = props;
+    const { format, range, theme, offset, firstDayOfWeek, locale, shownDate, unselected } = props;
 
     if(locale) {
       moment.locale(locale);
@@ -52,6 +52,7 @@ class Calendar extends Component {
     const date = parseInput(props.date, format, 'startOf')
     const state = {
       date,
+      unselected,
       shownDate : (shownDate || range && range['endDate'] || date).clone().add(offset, 'months'),
       firstDayOfWeek: (firstDayOfWeek || moment.localeData().firstDayOfWeek()),
     }
@@ -74,6 +75,13 @@ class Calendar extends Component {
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.state.unselected && !nextState.unselected) {
+      return true;
+    }
+    return false;
+  }
+
   getShownDate() {
     const { link, offset } = this.props;
 
@@ -89,8 +97,10 @@ class Calendar extends Component {
     onChange && onChange(newDate, Calendar);
 
     if (!link) {
-      this.setState({ date : newDate });
+      this.setState({ date : newDate, unselected: false });
     }
+
+    this.setState({ unselected: false });
   }
 
   changeMonth(direction, event) {
@@ -175,7 +185,7 @@ class Calendar extends Component {
     const { range, minDate, maxDate, disabledDates, format, onlyClasses, disableDaysBeforeToday, specialDays } = this.props;
 
     const shownDate                = this.getShownDate();
-    const { date, firstDayOfWeek } = this.state;
+    const { date, firstDayOfWeek, unselected } = this.state;
     const dateUnix                 = date.unix();
 
     const monthNumber              = shownDate.month();
@@ -240,7 +250,7 @@ class Calendar extends Component {
           theme={ styles }
           isStartEdge = { isStartEdge }
           isEndEdge = { isEndEdge }
-          isSelected={ isSelected || isEdge }
+          isSelected={ !unselected && (isSelected || isEdge) }
           isInRange={ isInRange }
           isSunday={ isSunday }
           isSpecialDay={ isSpecialDay }
@@ -279,6 +289,7 @@ Calendar.defaultProps = {
   classNames  : {},
   specialDays : [],
   disabledDates: [],
+  unselected: false,
 }
 
 Calendar.propTypes = {
@@ -294,6 +305,7 @@ Calendar.propTypes = {
   maxDate        : PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string]),
   disabledDates  : PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string])),
   date           : PropTypes.oneOfType([PropTypes.object, PropTypes.string, PropTypes.func]),
+  unselected     : PropTypes.bool,
   format         : PropTypes.string.isRequired,
   firstDayOfWeek : PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   onChange       : PropTypes.func,

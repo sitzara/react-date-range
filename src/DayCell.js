@@ -61,7 +61,7 @@ class DayCell extends Component {
     const passiveStyle  = isPassive ? styles['DayPassive'] : {};
     const startEdgeStyle = isStartEdge ? styles['DayStartEdge'] : {};
     const endEdgeStyle   = isEndEdge ? styles['DayEndEdge'] : {};
-    const selectedStyle = isSelected && !isPassive ? styles['DaySelected'] : {};
+    const selectedStyle = isSelected ? styles['DaySelected'] : {};
     const inRangeStyle  = isInRange ? styles['DayInRange'] : {};
     const todayStyle    = isToday ? styles['DayToday'] : {};
     const sundayStyle = isSunday ? styles['DaySunday'] : {};
@@ -109,7 +109,7 @@ class DayCell extends Component {
       height: styles['Day'].height,
       display: styles['Day'].display
     };
-    // console.log('dayMoment', dayMoment.format('DD/MM/YYYY'), 'stateStyle', stateStyle, 'classes', classes);
+
     return (
       <span
         style={onlyClasses ? undefined : dayWrapperStyles}
