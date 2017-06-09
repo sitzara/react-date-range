@@ -107,7 +107,7 @@ class DateRange extends Component {
   }
 
   render() {
-    const { ranges, format, linkedCalendars, style, calendars, firstDayOfWeek, minDate, maxDate, disabledDates, classNames, onlyClasses, specialDays, lang, disableDaysBeforeToday, offsetPositive, shownDate, showMonthArrow, rangedCalendars, unselected } = this.props;
+    const { ranges, format, linkedCalendars, style, calendars, firstDayOfWeek, minDate, maxDate, disabledDates, enabledDates, classNames, onlyClasses, specialDays, lang, disableDaysBeforeToday, offsetPositive, shownDate, showMonthArrow, rangedCalendars, unselected } = this.props;
     const { range, link } = this.state;
     const { styles } = this;
 
@@ -155,6 +155,7 @@ class DateRange extends Component {
                 minDate={ minDate }
                 maxDate={ maxDate }
                 disabledDates={ disabledDates }
+                enabledDates={ enabledDates }
                 unselected={ unselected }
 		            onlyClasses={ onlyClasses }
 		            specialDays={ specialDays }
@@ -181,6 +182,8 @@ DateRange.defaultProps = {
   rangedCalendars : false,
   twoStepChange   : false,
   disabledDates   : [],
+  enabledDates    : [],
+  unselected      : false,
 }
 
 DateRange.propTypes = {
@@ -192,6 +195,7 @@ DateRange.propTypes = {
   minDate         : PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string]),
   maxDate         : PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string]),
   disabledDates   : PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string])),
+  enabledDates    : PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string])),
   dateLimit       : PropTypes.func,
   ranges          : PropTypes.object,
   unselected      : PropTypes.bool,

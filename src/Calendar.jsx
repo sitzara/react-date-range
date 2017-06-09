@@ -38,6 +38,13 @@ function isDisabledDay(dayMoment, disabledDates, format) {
   }, false);
 }
 
+function isEnabledDay(dayMoment, enabledDates, format) {
+  return enabledDates.reduce((isEnabled, date) => {
+    return isEnabled || dayMoment.isSame(parseInput(date, format, 'startOf'), 'day');
+  }, false);
+}
+
+
 class Calendar extends Component {
 
   constructor(props, context) {
@@ -73,13 +80,6 @@ class Calendar extends Component {
     if ((range && range['endDate'] && !range['endDate'].isSame(range['startDate'], "day")) || (oldRange && !oldRange["startDate"].isSame(range["startDate"]))) {
       this.setState({ shownDate : range['endDate'].clone().add(offset, 'months') })
     }
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    if (this.state.unselected && !nextState.unselected) {
-      return true;
-    }
-    return false;
   }
 
   getShownDate() {
@@ -182,7 +182,7 @@ class Calendar extends Component {
     // TODO: Split this logic into smaller chunks
     const { styles }               = this;
 
-    const { range, minDate, maxDate, disabledDates, format, onlyClasses, disableDaysBeforeToday, specialDays } = this.props;
+    const { range, minDate, maxDate, disabledDates, enabledDates, format, onlyClasses, disableDaysBeforeToday, specialDays } = this.props;
 
     const shownDate                = this.getShownDate();
     const { date, firstDayOfWeek, unselected } = this.state;
@@ -242,6 +242,7 @@ class Calendar extends Component {
       });
       const isOutsideMinMax = isOusideMinMax(dayMoment, minDate, maxDate, format);
       const isDayDisabled = disabledDates.size !== 0 && isDisabledDay(dayMoment, disabledDates, format);
+      const isDayEnabled = enabledDates.size !== 0 && isEnabledDay(dayMoment, enabledDates, format);
 
       return (
         <DayCell
@@ -256,7 +257,7 @@ class Calendar extends Component {
           isSpecialDay={ isSpecialDay }
           isToday={ isToday }
           key={ index }
-          isPassive = { isPassive || isOutsideMinMax || isDayDisabled }
+          isPassive = { !(isDayEnabled || !(isPassive || isOutsideMinMax || isDayDisabled)) }
           onlyClasses = { onlyClasses }
           classNames = { classes }
         />
@@ -289,6 +290,7 @@ Calendar.defaultProps = {
   classNames  : {},
   specialDays : [],
   disabledDates: [],
+  enabledDates: [],
   unselected: false,
 }
 
@@ -304,6 +306,7 @@ Calendar.propTypes = {
   minDate        : PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string]),
   maxDate        : PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string]),
   disabledDates  : PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string])),
+  enabledDates   : PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.object, PropTypes.func, PropTypes.string])),
   date           : PropTypes.oneOfType([PropTypes.object, PropTypes.string, PropTypes.func]),
   unselected     : PropTypes.bool,
   format         : PropTypes.string.isRequired,
