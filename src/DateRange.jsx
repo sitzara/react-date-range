@@ -10,7 +10,7 @@ class DateRange extends Component {
 
   constructor(props, context) {
     super(props, context);
-
+    
     const { format, linkedCalendars, theme } = props;
     
     const startDate = parseInput(props.startDate, format, 'startOf');
@@ -88,12 +88,12 @@ class DateRange extends Component {
     });
   }
 
-  componentWillReceiveProps(newProps) {
+  componentWillReceiveProps(nextProps) {
     // Whenever date props changes, update state with parsed variant
-    if (newProps.startDate || newProps.endDate) {
-      const format       = newProps.format || this.props.format;
-      const startDate    = newProps.startDate   && parseInput(newProps.startDate, format, 'startOf');
-      const endDate      = newProps.endDate     && parseInput(newProps.endDate, format, 'endOf');
+    if (nextProps.startDate || nextProps.endDate) {
+      const format       = nextProps.format || this.props.format;
+      const startDate    = nextProps.startDate   && parseInput(nextProps.startDate, format, 'startOf');
+      const endDate      = nextProps.endDate     && parseInput(nextProps.endDate, format, 'endOf');
       const oldStartDate = this.props.startDate && parseInput(this.props.startDate, format, 'startOf');
       const oldEndDate   = this.props.endDate   && parseInput(this.props.endDate, format, 'endOf');
 
@@ -103,6 +103,11 @@ class DateRange extends Component {
           endDate: endDate || oldEndDate
         });
       }
+    } else {
+      const format = nextProps.format || this.props.format;
+      const startDate = parseInput(nextProps.startDate, format, 'startOf');
+      const endDate = parseInput(nextProps.endDate, format, 'endOf');
+      this.setState({ range: { startDate, endDate } });
     }
   }
 

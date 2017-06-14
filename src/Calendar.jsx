@@ -46,7 +46,6 @@ function isEnabledDay(dayMoment, enabledDates, format) {
 
 
 class Calendar extends Component {
-
   constructor(props, context) {
     super(props, context);
 
@@ -243,7 +242,7 @@ class Calendar extends Component {
       const isOutsideMinMax = isOusideMinMax(dayMoment, minDate, maxDate, format);
       const isDayDisabled = disabledDates.size !== 0 && isDisabledDay(dayMoment, disabledDates, format);
       const isDayEnabled = enabledDates.size !== 0 && isEnabledDay(dayMoment, enabledDates, format);
-
+      const isDayPassive = !(isDayEnabled || !(isPassive || isOutsideMinMax || isDayDisabled));
       return (
         <DayCell
           onSelect={ this.handleSelect.bind(this) }
@@ -251,13 +250,13 @@ class Calendar extends Component {
           theme={ styles }
           isStartEdge = { isStartEdge }
           isEndEdge = { isEndEdge }
-          isSelected={ !unselected && (isSelected || isEdge) }
+          isSelected={ !unselected && (!isDayPassive && (isSelected || isEdge)) }
           isInRange={ isInRange }
           isSunday={ isSunday }
           isSpecialDay={ isSpecialDay }
           isToday={ isToday }
           key={ index }
-          isPassive = { !(isDayEnabled || !(isPassive || isOutsideMinMax || isDayDisabled)) }
+          isPassive = { isDayPassive }
           onlyClasses = { onlyClasses }
           classNames = { classes }
         />
